@@ -43,7 +43,7 @@ FROM(
                            st0.subject_id = st2.subject_id
                            AND st0.hadm_id = st2.hadm_id
                          )
-         WHERE st0.subject_id IN( select DISTINCT subject_id from diagnoses_icd where icd9_code = '99591')
+         --WHERE st0.subject_id IN( select DISTINCT subject_id from diagnoses_icd where icd9_code = '99591')
     ) tmp
 GROUP BY subject_id
 HAVING COUNT(1) > 2
