@@ -46,5 +46,5 @@ FROM(
          --WHERE st0.subject_id IN( select DISTINCT subject_id from diagnoses_icd where icd9_code = '99591')
     ) tmp
 GROUP BY subject_id
-HAVING COUNT(1) > 2
+HAVING COUNT(1) >= 2
 ;
