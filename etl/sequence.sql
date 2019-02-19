@@ -1,9 +1,9 @@
 SELECT tmp.subject_id
        , COUNT(1) AS hadm_cnt
-       , STRING_AGG( tmp.icd9_procedure_arr, ' -1 ' order by tmp.time_id) AS icd9_procedure_sequence
-       , STRING_AGG( tmp.icd9_procedure_title_arr, ' -1 ' order by tmp.time_id) AS icd9_procedure_title_sequence
-       , STRING_AGG( tmp.icd9_diagnoses_arr, ' -1 ' order by tmp.time_id) AS icd9_diagnoses_sequence
-       , STRING_AGG( tmp.icd9_diagnoses_title_arr, ' -1 ' order by tmp.time_id) AS icd9_diagnoses_title_sequence
+       , CONCAT( STRING_AGG( tmp.icd9_procedure_arr, ' -1 ' order by tmp.time_id), ' -2') AS icd9_procedure_sequence
+       , CONCAT( STRING_AGG( tmp.icd9_procedure_title_arr, ' -1 ' order by tmp.time_id), ' -2') AS icd9_procedure_title_sequence
+       , CONCAT( STRING_AGG( tmp.icd9_diagnoses_arr, ' -1 ' order by tmp.time_id), ' -2') AS icd9_diagnoses_sequence
+       , CONCAT( STRING_AGG( tmp.icd9_diagnoses_title_arr, ' -1 ' order by tmp.time_id), ' -2') AS icd9_diagnoses_title_sequence
 FROM(
          SELECT st0.subject_id AS subject_id
                 , st0.hadm_id AS hadm_id
