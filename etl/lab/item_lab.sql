@@ -2,8 +2,8 @@ with labevents_64 AS
 (
     SELECT st1.subject_id AS subject_id
            , st1.hadm_id AS hadm_id
-           , CASE WHEN st1.hadm_id IS NULL THEN'in'
-                  ELSE 'off'
+           , CASE WHEN st1.hadm_id IS NULL THEN'off'
+                  ELSE 'on'
              END AS is_hadm
            , st1.charttime AS time_id
            , CAST( st1.charttime AS date) AS date_id
