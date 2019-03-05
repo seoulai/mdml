@@ -1,0 +1,9 @@
+jupyter
+tornado==4.5.3
+sqlalchemy
+pandas
+psycopg2-binary
+numpy
+matplotlib
+seaborn
+scikit-learn
