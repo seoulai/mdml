@@ -3,7 +3,7 @@ WITH patients AS
     -- https://mimic.physionet.org/tutorials/intro-to-mimic-iii/#5-patient-age-and-mortality
     SELECT st0.subject_id
            , st0.gender
-           , ROUND( ( CAST( st1.first_admittime AS date) - CAST(st0.dob AS date)) / 365.242,2) AS age
+           , ROUND( ( CAST( st1.first_admittime AS date) - CAST(st0.dob AS date)) / 365.242,2) AS first_admit_age
            , st0.dob AS birth_date
            , st1.first_admittime
            , st1.last_admittime
@@ -27,9 +27,9 @@ WITH patients AS
 )
 SELECT *
        -- all ages > 89 in the database were replaced with 300
-       , CASE WHEN age > 89 THEN '>89'
-              WHEN age >= 14 THEN 'adult'
-              WHEN age <= 1 THEN 'neonate'
+       , CASE WHEN first_admit_age > 89 THEN '>89'
+              WHEN first_admit_age >= 14 THEN 'adult'
+              WHEN first_admit_age <= 1 THEN 'neonate'
               ELSE 'middle'
         END AS age_group
 INTO detailed_patients
