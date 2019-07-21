@@ -67,7 +67,7 @@ SELECT
   coalesce(SysBP_score, 0)
   + coalesce(GCS_score, 0)
   + coalesce(RespRate_score, 0)
-    AS dailyqsofa,
+    AS hourlyqsofa,
   SysBP_score,
   GCS_score,
   RespRate_score
