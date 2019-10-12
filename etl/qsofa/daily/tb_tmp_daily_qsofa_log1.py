@@ -26,7 +26,7 @@ class TbTmpDailyqSOFALog1():
               FROM (
                     SELECT CAST(charttime AS DATE) AS date_id
                            , subject_id
-                           , (REGEXP_MATCHED(value, '\>?(\d*)'))[1] AS rr
+                           , (REGEXP_MATCHES(value, '\>?(\d*)'))[1] AS rr
                       FROM chartevents
                     WHERE itemid IN ('618', '615', '220210', '224690')
                    ) tmp

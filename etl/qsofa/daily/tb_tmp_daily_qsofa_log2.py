@@ -22,7 +22,7 @@ class TbTmpDailyqSOFALog2():
         sql = """
             SELECT date_id
                    , subject_id
-                   , MAX( CAST( bp AS INT)) AS bp
+                   , MIN( CAST( bp AS INT)) AS bp
               FROM (
                     SELECT CAST(charttime AS DATE) AS date_id
                            , subject_id
