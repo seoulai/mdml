@@ -22,16 +22,15 @@ class TbTmpDailyqSOFALog2():
         sql = """
             SELECT date_id
                    , subject_id
-                   , MIN( CAST( bp AS INT)) AS bp
+                   , MIN(bp) AS bp
               FROM (
                     SELECT CAST(charttime AS DATE) AS date_id
                            , subject_id
-                           , (REGEXP_MATCHES(value, '(\d*)'))[1] AS bp
+                           , CAST(valuenum AS INT) AS bp
                       FROM chartevents
                     WHERE itemid IN ( '51', '442', '455', '6701', '220179', '220050')
                    ) tmp
-            WHERE LENGTH(bp) != 0
-              AND CAST( bp AS INT) BETWEEN 0 AND 400
+            WHERE bp BETWEEN 0 AND 400
             GROUP BY subject_id
                      , date_id
         """

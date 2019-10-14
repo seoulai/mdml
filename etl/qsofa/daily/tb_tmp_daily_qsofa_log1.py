@@ -18,22 +18,24 @@ class TbTmpDailyqSOFALog1():
     ):
         psql = PsqlDB()
         engine = psql.conn("mimic")
-        # regexp_matches(value, '\>?(\d*)\.?\d*')
+
         sql = """
             SELECT date_id
-                   , subject_id
-                   , MAX( CAST( rr AS INT)) AS rr
+                  , subject_id
+                  , MAX(rr) AS rr
               FROM (
-                    SELECT CAST(charttime AS DATE) AS date_id
-                           , subject_id
-                           , (REGEXP_MATCHES(value, '\>?(\d*)'))[1] AS rr
-                      FROM chartevents
-                    WHERE itemid IN ('618', '615', '220210', '224690')
+                  SELECT CAST(charttime AS DATE) AS date_id
+                         , subject_id
+                         , CASE WHEN SUBSTRING(value, 1, 1) = '>'
+                                THEN CAST(SUBSTRING(value, 2, 2) AS INT)
+                                ELSE CAST(valuenum AS INT)
+                           END AS rr
+                    FROM chartevents
+                   WHERE itemid IN ('618', '615', '220210', '224690')
                    ) tmp
-            WHERE LENGTH(rr) != 0
-              AND CAST( rr AS INT) BETWEEN 0 AND 300
-            GROUP BY subject_id
-                     , date_id
+             WHERE rr BETWEEN 0 AND 300
+             GROUP BY subject_id
+                      , date_id
         """
         print(sql)
         return pd.read_sql(sql, engine)
