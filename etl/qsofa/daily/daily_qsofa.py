@@ -12,11 +12,11 @@ class ETLDailyqSOFA():
     def run(
         self,
     ):
-        # TbTmpDailyqSOFALog0().run()    # date
-        # TbTmpDailyqSOFALog1().run()    # RR(respiratory rate)
-        # TbTmpDailyqSOFALog2().run()    # BP(blood pressure)
-        # TbTmpDailyqSOFALog3().run()    # GCS(Glasgow coma scale)
-        # TbTmpDailyqSOFALog4().run()    # merge
+        TbTmpDailyqSOFALog0().run()    # date
+        TbTmpDailyqSOFALog1().run()    # RR(respiratory rate)
+        TbTmpDailyqSOFALog2().run()    # BP(blood pressure)
+        TbTmpDailyqSOFALog3().run()    # GCS(Glasgow coma scale)
+        TbTmpDailyqSOFALog4().run()    # merge
         TbTmpDailyqSOFALog5().run()    # final
 
 
