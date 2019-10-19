@@ -21,15 +21,19 @@ class TbTmpDailyqSOFALog5():
         engine = psql.conn("mimic_tmp")
 
         sql = """
-            SELECT date_id
-                   , subject_id
-                   , rr
-                   , bp
-                   , gcs
-                   , CASE WHEN rr >= 22 AND bp <= 100 AND gcs < 15 THEN 1
-                          ELSE 0
-                     END AS is_qsofa
-              FROM tb_tmp_daily_qsofa_log4
+            SELECT *
+                   , rr_score + bp_score + gcs_score AS qsofa_score
+              FROM (
+                    SELECT date_id
+                           , subject_id
+                           , rr
+                           , bp
+                           , gcs
+                           , CASE WHEN rr >= 22 THEN 1 ELSE 0 END AS rr_score
+                           , CASE WHEN bp <= 100 THEN 1 ELSE 0 END AS bp_score
+                           , CASE WHEN gcs > 15 THEN 1 ELSE 0 END AS gcs_score
+                      FROM tb_tmp_daily_qsofa_log4
+                   ) tmp
         """
         print(sql)
         return pd.read_sql(sql, engine)
@@ -45,7 +49,10 @@ class TbTmpDailyqSOFALog5():
             'rr': types.INTEGER,
             'bp': types.INTEGER,
             'gcs': types.INTEGER,
-            'is_qsofa': types.INTEGER,
+            'rr_score': types.INTEGER,
+            'bp_score': types.INTEGER,
+            'gcs_score': types.INTEGER,
+            'qsofa_score': types.INTEGER,
         }
 
         psql = PsqlDB()
