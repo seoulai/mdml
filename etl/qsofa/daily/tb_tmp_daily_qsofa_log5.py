@@ -31,7 +31,7 @@ class TbTmpDailyqSOFALog5():
                            , gcs
                            , CASE WHEN rr >= 22 THEN 1 ELSE 0 END AS rr_score
                            , CASE WHEN bp <= 100 THEN 1 ELSE 0 END AS bp_score
-                           , CASE WHEN gcs > 15 THEN 1 ELSE 0 END AS gcs_score
+                           , CASE WHEN gcs < 15 THEN 1 ELSE 0 END AS gcs_score
                       FROM tb_tmp_daily_qsofa_log4
                    ) tmp
         """
