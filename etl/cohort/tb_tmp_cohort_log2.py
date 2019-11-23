@@ -28,8 +28,8 @@ class TbTmpCohortLog2(BaseETL):
         self,
     ):
         params = {
-            "cond1": "base_term < antibiotic_startdate AND antibiotic_startdate <= end_term1",
-            "cond2": "base_term < antibiotic_startdate AND antibiotic_startdate <= end_term2",
+            "cond1": "base_term1 < antibiotic_startdate AND antibiotic_startdate <= end_term1",
+            "cond2": "base_term2 < antibiotic_startdate AND antibiotic_startdate <= end_term2",
         }
 
         return """
@@ -56,7 +56,8 @@ class TbTmpCohortLog2(BaseETL):
                            , st1.charttime
                            , st1.spec_type_desc
                            , st1.positive_culture
-                           , st1.base_term
+                           , st1.base_term1
+                           , st1.base_term2
                            , st1.end_term1
                            , st1.end_term2
                       FROM (
@@ -69,14 +70,19 @@ class TbTmpCohortLog2(BaseETL):
                                                   , CASE WHEN charttime IS NOT NULL THEN charttime
                                                          ELSE chartdate 
                                                      END
-                                                    AS base_term
+                                                    AS base_term1
 
                                                   , CASE WHEN charttime IS NOT NULL THEN charttime + interval '72' hour
                                                          ELSE chartdate + interval '96' hour
                                                      END
                                                     AS end_term1
-                                                  , CASE WHEN charttime IS NOT NULL THEN charttime + interval '72' hour
-                                                         ELSE chartdate + interval '96' hour
+
+                                                  , CASE WHEN charttime IS NOT NULL THEN charttime - interval '24' hour
+                                                         ELSE chartdate
+                                                     END
+                                                    AS base_term2 
+                                                  , CASE WHEN charttime IS NOT NULL THEN charttime
+                                                         ELSE chartdate + interval '24' hour
                                                      END
                                                     AS end_term2
                                              FROM tb_tmp_dim_positive_culture
