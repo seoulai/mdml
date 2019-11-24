@@ -154,3 +154,23 @@ abxs = [
     'zosyn',
     'zyvox'
 ]
+
+suspected_infection_terms = """
+                  , CASE WHEN charttime IS NOT NULL THEN charttime
+                         ELSE chartdate 
+                     END
+                    AS base_term1
+                  , CASE WHEN charttime IS NOT NULL THEN charttime + interval '72' hour
+                         ELSE chartdate + interval '96' hour
+                     END
+                    AS end_term1
+
+                  , CASE WHEN charttime IS NOT NULL THEN charttime - interval '24' hour
+                         ELSE chartdate
+                     END
+                    AS base_term2 
+                  , CASE WHEN charttime IS NOT NULL THEN charttime
+                         ELSE chartdate + interval '24' hour
+                     END
+                    AS end_term2
+"""
