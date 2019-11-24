@@ -32,7 +32,6 @@ class TbTmpCohortLog2(BaseETL):
         params = {
             "cond1": "base_term1 < antibiotic_startdate AND antibiotic_startdate <= end_term1",
             "cond2": "base_term2 < antibiotic_startdate AND antibiotic_startdate <= end_term2",
-            "columns": columns
         }
 
         return """
