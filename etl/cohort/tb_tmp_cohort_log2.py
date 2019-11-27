@@ -1,4 +1,4 @@
-from variables import suspected_infection_terms
+from variables import suspected_infection_terms, columns
 from base_etl import BaseETL
 
 
@@ -32,14 +32,16 @@ class TbTmpCohortLog2(BaseETL):
         params = {
             "cond1": "base_term1 < antibiotic_startdate AND antibiotic_startdate <= end_term1",
             "cond2": "base_term2 < antibiotic_startdate AND antibiotic_startdate <= end_term2",
+            "columns": columns,
         }
 
         return """
             WITH tb_tmp_all AS
             (
                 SELECT st0.*
-                       , st1.chartdate
-                       , st1.charttime
+                       -- , st1.chartdate
+                       -- , st1.charttime
+                       , st1.charttime_
                        , st1.spec_type_desc
                        , st1.positive_culture
                        , st1.base_term1
@@ -51,7 +53,11 @@ class TbTmpCohortLog2(BaseETL):
                               FROM tb_tmp_cohort_log1
                              WHERE antibiotic_startdate IS NOT NULL
                        ) st0
-                 LEFT OUTER JOIN tb_tmp_dim_positive_culture st1
+                 LEFT OUTER JOIN (
+                                      SELECT *
+                                             , COALESCE(charttime, chartdate) AS charttime_
+                                        FROM tb_tmp_dim_positive_culture
+                                 ) st1
                               ON (st0.subject_id = st1.subject_id
                                   AND st0.hadm_id = st1.hadm_id
                                  )
@@ -64,6 +70,7 @@ class TbTmpCohortLog2(BaseETL):
                               ELSE 0
                           END
                          AS suspected_infection
+                       , COALESCE(charttime_, antibiotic_startdate) AS suspected_infection_time
                   FROM tb_tmp_all
             )
             , tb_suspected_infection_all AS
@@ -72,7 +79,7 @@ class TbTmpCohortLog2(BaseETL):
                 SELECT *
                        , RANK() OVER (
                              PARTITION BY subject_id
-                             ORDER BY antibiotic_startdate
+                             ORDER BY charttime_, suspected_infection, antibiotic_startdate, intime
                          ) AS rank
                   FROM tb_suspected_infection_all0
                  WHERE (
@@ -81,10 +88,14 @@ class TbTmpCohortLog2(BaseETL):
                        )
             )
             -- tb_first_suspected_infection
-            SELECT *
-                   , antibiotic_startdate AS suspected_infection_time
+            SELECT 
+                   {columns}
+                   , ARRAY_AGG( DISTINCT CONCAT(positive_culture, ';', LOWER(antibiotic_name), ';', LOWER(spec_type_desc), ';', LOWER(route))) AS suspected_infection_arr
+                   , COUNT(1) AS antibiotic_cnt
               FROM tb_suspected_infection_all
              WHERE rank = 1
+             GROUP BY
+                   {columns}
         """.format(**params)
 
     def run(

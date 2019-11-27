@@ -174,3 +174,25 @@ suspected_infection_terms = """
                      END
                     AS end_term2
 """
+
+columns = """
+    subject_id
+    , hadm_id
+    , icustay_id
+    , intime
+    , outtime
+    , dbsource
+    , antibiotic_startdate
+    -- , antibiotic_enddate
+    -- , antibiotic_name
+    , drug_type
+    -- , drug_name_generic
+    -- , route
+    -- , charttime
+    -- , chartdate
+    , charttime_
+    -- , spec_type_desc
+    -- , positive_culture
+    , suspected_infection
+    , suspected_infection_time
+"""
